@@ -1,4 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+
+const PoliticianCard = React.memo(function PoliticianCard({ p }) {
+  console.log("Renderizzazione Card:", p.id ?? p.name);
+  return (
+    <li className="card">
+      {p.image && <img className="card-img" src={p.image} alt={p.name} />}
+      <h3 className="card-title">{p.name}</h3>
+      <p className="card-position">{p.position}</p>
+      <p className="card-bio">{p.biography}</p>
+    </li>
+  );
+});
 
 function PoliticianList() {
   const [politicians, setPoliticians] = useState([]);
@@ -29,7 +41,7 @@ function PoliticianList() {
     if (!q) return politicians;
     return politicians.filter((p) => {
       const name = (p.name || "").toLowerCase();
-      const bio = (p.biograph || "").toLowerCase();
+      const bio = (p.biography || "").toLowerCase();
       return name.includes(q) || bio.includes(q);
     });
   }, [politicians, query]);
@@ -44,16 +56,15 @@ function PoliticianList() {
         <input type="text" placeholder="Cerca nome o bio" value={query} onChange={(e) => setQuery(e.target.value)} className="search-input" />
         <span className="search-count">Risultati: {filter.length}</span>
       </div>
-      <ul className="cards">
-        {filter.map((p) => (
-          <li className="card" key={p.id}>
-            {p.image && <img className="card-img" src={p.image} alt={p.name} />}
-            <h3 className="card-name">{p.name}</h3>
-            <p className="card-position">{p.position}</p>
-            <p className="card-bio">{p.biography}</p>
-          </li>
-        ))}
-      </ul>
+      {filter.length === 0 ? (
+        <p className="empty">Nessun risultato per "{query}"</p>
+      ) : (
+        <ul className="cards">
+          {filter.map((p) => (
+            <PoliticianCard key={p.id} p={p} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
