@@ -44,3 +44,19 @@
 .card-bio {
   margin: 0;
 }
+.search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.search-input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.search-count {
+  font-size: 0.9rem;
+  color: #666;
+}
