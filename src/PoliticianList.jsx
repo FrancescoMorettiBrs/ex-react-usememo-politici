@@ -17,6 +17,7 @@ function PoliticianList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [positionFilter, setPoistionFilter] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -36,24 +37,44 @@ function PoliticianList() {
     load();
   }, []);
 
+  const positions = useMemo(() => {
+    const set = new Set();
+    for (const p of politicians) {
+      const pos = p?.position?.trim();
+      if (pos) set.add(pos);
+    }
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [politicians]);
+
   const filter = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return politicians;
     return politicians.filter((p) => {
       const name = (p.name || "").toLowerCase();
       const bio = (p.biography || "").toLowerCase();
-      return name.includes(q) || bio.includes(q);
+      const pos = p.position;
+      const matchesText = !q || name.includes(q) || bio.includes(q);
+      const matchesPos = !positionFilter || pos === positionFilter;
+      return matchesText && matchesPos;
     });
-  }, [politicians, query]);
+  }, [politicians, query, positionFilter]);
 
   if (loading) return <p>Caricamento...</p>;
   if (error) return <p>Errore: {error}</p>;
   if (politicians.length === 0) return <p>Nessun politico trovato</p>;
+
   return (
     <div className="container">
       <h1 className="title">Politici</h1>
-      <div className="search">
+      <div className="filters">
         <input type="text" placeholder="Cerca nome o bio" value={query} onChange={(e) => setQuery(e.target.value)} className="search-input" />
+        <select value={positionFilter} onChange={(e) => setPoistionFilter(e.target.value)} className="select">
+          <option value="">Tutte le posizioni</option>
+          {positions.map((pos) => (
+            <option key={pos} value={pos}>
+              {pos}
+            </option>
+          ))}
+        </select>
         <span className="search-count">Risultati: {filter.length}</span>
       </div>
       {filter.length === 0 ? (

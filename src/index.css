@@ -52,11 +52,25 @@
 }
 .search-input {
   flex: 1;
+  min-width: 220px;
   padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+.select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
 .search-count {
   font-size: 0.9rem;
   color: #666;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
